@@ -16,6 +16,8 @@ def calculate_vowel_consonant_ratio(text):
                 consonant_count += 1
 
     if consonant_count == 0:
+        if vowel_count == 0:
+            return None  # Handle cases where there are no vowels or consonants.
         return float('inf')  # Handle cases where there are no consonants.
 
     ratio = vowel_count / consonant_count
@@ -103,8 +105,8 @@ def main():
                         mwl, awl = max_and_average_word_length(line)
                         mccl, accl = max_and_average_consonant_chain_lengths(line)
                         cp = capitalization_pattern(line)
-
-                        outfile.write(f"{language}: {vcratio}, {wvc}, {mwl}, {awl}, {mccl}, {accl}, {cp}\n")
+                        if mwl <= 40 and vcratio != None:
+                            outfile.write(f"{language}: {vcratio}, {wvc}, {mwl}, {awl}, {mccl}, {accl}, {cp}\n")
             except FileNotFoundError:
                 print(f"The corresponding language input file {input_file} does not exist.")
                 return
