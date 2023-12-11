@@ -169,33 +169,6 @@ def load_model_with_pickle(filename):
         model = pickle.load(file)
     return model
 
-#from sklearn.datasets import load_iris
-#from sklearn.model_selection import train_test_split
-
-## Load the Iris dataset
-#iris = load_iris()
-#X = iris.data
-#y = iris.target
-
-## Split the dataset into training and validation sets
-#X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
-
-## Define hyperparameter ranges to tune
-#max_depths = [2, 3, 4, 5]
-#min_samples_splits = [2, 3, 4]
-
-## Perform hyperparameter tuning
-#best_max_depth, best_min_samples_split, best_accuracy, best_tree= hyperparameter_tuning(X_train, y_train, X_val, y_val, max_depths, min_samples_splits)
-
-#print("Best Max Depth:", best_max_depth)
-#print("Best Min Sample Split:", best_min_samples_split)
-#print("Best Accuracy:", best_accuracy)
-#print_tree(best_tree)
-##save_tree_to_file(best_tree, "best_tree.txt")
-##tree = load_tree_from_file("best_tree.txt")
-#save_model_with_pickle(best_tree, 'best_tree.pkl')
-#loaded_tree = load_model_with_pickle('best_tree.pkl')
-#print_tree(loaded_tree)
 
 #data = load_data()
 #sampled_data = sample_data(data, 10000)
