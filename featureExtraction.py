@@ -23,11 +23,11 @@ def calculate_vowel_consonant_ratio(text):
     ratio = vowel_count / consonant_count
     return ratio
 
-def count_words_ending_with_vowels(text):
+def count_words_ending_with_vowels_normalized(text):
     words = text.split()
-    # Check the last character of each word; if it's punctuation, consider the second last character
-    count = sum(1 for word in words if word[-1].lower() in vowels )
-    return count
+    word_count = len(words)
+    vowel_ending_count = sum(1 for word in words if word[-1] in vowels)
+    return vowel_ending_count / word_count if word_count > 0 else 0
 
 def max_and_average_word_length(text):
     words = text.split()
@@ -40,15 +40,13 @@ def max_and_average_word_length(text):
 
     return max_word_length, average_word_length
 
-
-
-
 def max_and_average_consonant_chain_lengths(text):
     consonants = 'bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ'
     max_chain_length = 0
     total_chain_length = 0
     current_chain_length = 0
     chain_count = 0
+    total_chars = len(text)
 
     for char in text:
         if char in consonants:
@@ -60,56 +58,31 @@ def max_and_average_consonant_chain_lengths(text):
                 chain_count += 1
             current_chain_length = 0
 
-    # Calculate average chain length; avoid division by zero
-    average_chain_length = total_chain_length / chain_count if chain_count > 0 else 0
+    average_chain_length = total_chain_length / total_chars if total_chars > 0 else 0
+    normalized_max_chain_length = max_chain_length / total_chars if total_chars > 0 else 0
 
-    return max_chain_length, average_chain_length
+    return normalized_max_chain_length, average_chain_length
 
-def capitalization_pattern(text):
-    words = text.split()
-    total_words = len(words)
-    capitalized_words = sum(1 for word in words if word.istitle())
-
-    if total_words > 0:
-        percentage_capitalized = (capitalized_words / total_words)
-    else:
-        percentage_capitalized = 0
-
-    return percentage_capitalized
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Calculate various text features for each line of text")
-    parser.add_argument("language_codes", help="Comma-separated list of language codes (e.g., 'en,it,nl')")
-    args = parser.parse_args()
-
-    languages = args.language_codes.split(',')
-    segment_lengths = [10, 20, 50]
-
+def extract(data_file):
+    input_file = data_file
+    output_file = "input_feature.txt"
     remove_punct_trans = str.maketrans('', '', string.punctuation)
 
-    for language in languages:
-        for length in segment_lengths:
-            input_file = f"{language}_{length}.txt"
-            output_file = f"{language}_{length}_feature.txt"
+    try:
+        with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
+            for line in infile:
+                line = line.translate(remove_punct_trans)
+                line = line.strip()
 
-            try:
-                with open(input_file, "r", encoding="utf-8") as infile, open(output_file, "w", encoding="utf-8") as outfile:
-                    for line in infile:
-                        line = line.translate(remove_punct_trans)
-                        line = line.strip()
+                # Call your feature extraction functions here
+                vcratio = calculate_vowel_consonant_ratio(line)
+                wvc = count_words_ending_with_vowels_normalized(line)
+                mwl, awl = max_and_average_word_length(line)
+                mccl, accl = max_and_average_consonant_chain_lengths(line)
 
-                        # Call your feature extraction functions here
-                        vcratio = calculate_vowel_consonant_ratio(line)
-                        wvc = count_words_ending_with_vowels(line)
-                        mwl, awl = max_and_average_word_length(line)
-                        mccl, accl = max_and_average_consonant_chain_lengths(line)
-                        cp = capitalization_pattern(line)
-                        if mwl <= 40 and vcratio != None:
-                            outfile.write(f"{language}: {vcratio}, {wvc}, {mwl}, {awl}, {mccl}, {accl}, {cp}\n")
-            except FileNotFoundError:
-                print(f"The corresponding language input file {input_file} does not exist.")
-                return
+                outfile.write(f"{vcratio}, {wvc}, {mwl}, {awl}, {mccl}, {accl}\n")
+    except FileNotFoundError:
+        print(f"The corresponding language input file {input_file} does not exist.")
+        return
 
-if __name__ == "__main__":
-    main()
+extract("langtest.txt")
