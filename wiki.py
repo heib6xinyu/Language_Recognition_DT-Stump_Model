@@ -134,10 +134,10 @@ def predict_all(model_type, datafile):
         with open("tree_prediction.txt", 'w', encoding='utf-8') as outfile:
             for prediction in y_pred:
                 outfile.write(str(prediction) + '\n')
-    elif model_type == 'stumps':
-        model_it = load_adaboost_model("IT_best_adab_sample_size_1000_acc_0.94_n_learners_10.pkl")
-        model_nl = load_adaboost_model("NL_best_adab_sample_size_1000_acc_0.795_n_learners_15.pkl")
-        model_en = load_adaboost_model("EN_best_adab_sample_size_1000_acc_0.84_n_learners_50.pkl")
+    elif model_type == 'stumps' or model_type == 'best':
+        model_it = load_adaboost_model("IT_adab_sample_size_1500_acc_0.9566666666666667_n_learners_10.pkl")
+        model_nl = load_adaboost_model("NL_adab_sample_size_1500_acc_0.83_n_learners_50.pkl")
+        model_en = load_adaboost_model("EN_adab_sample_size_1500_acc_0.81_n_learners_15.pkl")
         models = [model_it,model_nl,model_en]
         y_pred = predict_multiclass(models, X_test)
         with open("stumps_prediction.txt", 'w', encoding='utf-8') as outfile:
